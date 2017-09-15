@@ -1,7 +1,13 @@
 package com.avdoshka.android.luckywheel;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -10,6 +16,17 @@ import android.view.View;
  */
 
 public class LuckyWheel extends View {
+
+    private float mBearing;
+    private Paint mCirclePaint;
+    private Paint mSectorPaint;
+    private Paint mTextPaint;
+    private int mCenterX, mCenterY, mRadius;
+    private RectF mRectF;
+    private int [] mColorArr;
+    private int mViewWidth, mViewHeight;
+    private final int TEXT_SIZE = 30;
+
 
     public LuckyWheel(Context context) {
         super(context);
@@ -24,10 +41,6 @@ public class LuckyWheel extends View {
     public LuckyWheel(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initLuckyWheel();
-    }
-
-    private void initLuckyWheel() {
-        setFocusable(true);
     }
 
     @Override
@@ -51,9 +64,64 @@ public class LuckyWheel extends View {
         }
 
         return result;
+    }
 
+    private void initLuckyWheel() {
+        setFocusable(true);
 
+        mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mCirclePaint.setColor(ContextCompat.getColor(getContext(), android.R.color.holo_purple));
+        mCirclePaint.setStrokeWidth(5);
+        mCirclePaint.setStyle(Paint.Style.STROKE);
 
+        mSectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mSectorPaint.setColor(ContextCompat.getColor(getContext(), android.R.color.holo_blue_light));
+        mSectorPaint.setStyle(Paint.Style.FILL);
+
+        mTextPaint = new Paint();
+        mTextPaint.setColor(Color.WHITE);
+        mTextPaint.setTextSize(TEXT_SIZE);
+        mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
+
+        mColorArr  = new int[] {Color.RED, Color.GRAY, Color.GREEN, Color.BLUE,
+                                Color.WHITE, Color.YELLOW, Color.CYAN, Color.BLACK};
+    }
+
+    private void calculateCircleParams() {
+        mViewWidth = getMeasuredWidth();
+        mViewHeight = getMeasuredHeight();
+        mCenterX = mViewWidth / 2;
+        mCenterY = mViewHeight / 2;
+        mRadius = (int)(0.8 * Math.min(mCenterX, mCenterY));
+        mRectF = new RectF(mCenterX - mRadius, mCenterY - mRadius,
+                           mCenterX + mRadius, mCenterY +mRadius);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (mRadius == 0) {
+            calculateCircleParams();
+        }
+        canvas.drawCircle(mCenterX, mCenterY, mRadius, mCirclePaint);
+
+        int angleStep = 360 / mColorArr.length;
+        int initialAngle = 180 - angleStep/2;
+        for (int i = 0; i < mColorArr.length; i++) {
+            canvas.drawArc(mRectF, initialAngle,angleStep, true, mSectorPaint);
+            canvas.drawText("OPTION " + i, mViewWidth / 2f - mRadius * 0.9f, mViewHeight / 2f + TEXT_SIZE / 2, mTextPaint);
+            mSectorPaint.setColor(mColorArr[i]);
+            canvas.rotate(angleStep, mCenterX, mCenterY);
+        }
 
     }
+
+    public float getBearing() {
+        return mBearing;
+    }
+
+    public void setBearing(float mBearing) {
+        this.mBearing = mBearing;
+    }
+
 }
