@@ -1,17 +1,17 @@
 package com.avdoshka.android.luckywheel;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.RotateAnimation;
 
 
 public class MainActivity extends AppCompatActivity implements GestureLuckyWheel.RotationFlingListener{
 
     private GestureLuckyWheel gestureLuckyWheel;
-    private Animation an;
+    private float lastRotation;
 
     @Override
     public void onRotationFling(float rotationMoment) {
@@ -35,36 +35,44 @@ public class MainActivity extends AppCompatActivity implements GestureLuckyWheel
     }
 
     private void startRotateAnimation(final float rotationMoment) {
-        /*Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                // Create an animation instance
-                Animation an = new RotateAnimation(0.0f,+3600.0f, gestureLuckyWheel.getWidth() / 2, gestureLuckyWheel.getHeight() / 2);
 
-                // Set the animation's parameters
-                an.setDuration(100000/speed);               // duration in ms
-                an.setRepeatCount(0);                // -1 = infinite repeated
-
-                an.setInterpolator(new DecelerateInterpolator());
-
-                // Aply animation to image view
-                gestureLuckyWheel.setAnimation(an);
-            }
-        };
-
-        gestureLuckyWheel.post(runnable);*/
-
-        Log.d("AAAAAAAAAAAAA", "rotationMoment = " + String.valueOf(rotationMoment));
         int rotMom = Math.abs((int)rotationMoment);
         if (rotMom != 0) {
-            an = new RotateAnimation(0.0f, -rotationMoment/400, gestureLuckyWheel.getWidth() / 2, gestureLuckyWheel.getHeight() / 2);
+            /*float initRotation = gestureLuckyWheel.getRotation();
+            Log.d("AAAAAAAAAAAA", "initRotation: " + initRotation);
+            an = new RotateAnimation(initRotation, initRotation - rotationMoment/400, gestureLuckyWheel.getWidth() / 2, gestureLuckyWheel.getHeight() / 2);
             // Set the animation's parameters
             an.setDuration(rotMom / 30);               // duration in ms
             an.setRepeatCount(0);                // -1 = infinite repeated
             an.setInterpolator(new DecelerateInterpolator());
             an.setFillAfter(true);
+
             // Aply animation to image view
-            gestureLuckyWheel.startAnimation(an);
+            gestureLuckyWheel.startAnimation(an);*/
+
+
+            ObjectAnimator animation = ObjectAnimator.ofFloat(gestureLuckyWheel, "rotation", lastRotation, lastRotation - rotationMoment/400);
+            animation.setDuration(rotMom / 30);
+            gestureLuckyWheel.setPivotX(gestureLuckyWheel.getWidth() / 2);
+            gestureLuckyWheel.setPivotY(gestureLuckyWheel.getHeight() / 2);
+            animation.setRepeatCount(0);
+            animation.setInterpolator(new DecelerateInterpolator());
+            animation.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {}
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    lastRotation = gestureLuckyWheel.getRotation();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {}
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {}
+            });
+            animation.start();
         }
 
     }
