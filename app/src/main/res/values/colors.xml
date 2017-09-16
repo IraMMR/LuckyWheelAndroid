@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#1BA5B8</color>
+    <color name="colorPrimaryDark">#1CA5B8</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#ffff</color>
+
+    <!-- Color Scheme One -->
+    <color name="colorOne">#012D41</color>
+    <color name="colorTwo">#1BA5B8</color>
+    <color name="colorThree">#DAECF3</color>
+    <color name="colorFour">#FF404E</color>
+    <color name="colorFive">#1CA5B8 </color>
 </resources>

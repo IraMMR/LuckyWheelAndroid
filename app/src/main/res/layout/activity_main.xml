@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.avdoshka.android.luckywheel.MainActivity">
 
-    <com.avdoshka.android.luckywheel.LuckyWheel
+    <com.avdoshka.android.luckywheel.GestureLuckyWheel
         android:id="@+id/lucky_wheel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

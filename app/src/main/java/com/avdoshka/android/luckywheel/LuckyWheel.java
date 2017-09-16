@@ -17,15 +17,17 @@ import android.view.View;
 
 public class LuckyWheel extends View {
 
-    private float mBearing;
+    //private float mBearing;
     private Paint mCirclePaint;
     private Paint mSectorPaint;
     private Paint mTextPaint;
-    private int mCenterX, mCenterY, mRadius;
+    protected int mCenterX, mCenterY;
+    private  int mRadius;
     private RectF mRectF;
     private int [] mColorArr;
     private int mViewWidth, mViewHeight;
     private final int TEXT_SIZE = 30;
+
 
 
     public LuckyWheel(Context context) {
@@ -70,12 +72,11 @@ public class LuckyWheel extends View {
         setFocusable(true);
 
         mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mCirclePaint.setColor(ContextCompat.getColor(getContext(), android.R.color.holo_purple));
-        mCirclePaint.setStrokeWidth(5);
+        mCirclePaint.setColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        mCirclePaint.setStrokeWidth(7);
         mCirclePaint.setStyle(Paint.Style.STROKE);
 
         mSectorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mSectorPaint.setColor(ContextCompat.getColor(getContext(), android.R.color.holo_blue_light));
         mSectorPaint.setStyle(Paint.Style.FILL);
 
         mTextPaint = new Paint();
@@ -83,8 +84,8 @@ public class LuckyWheel extends View {
         mTextPaint.setTextSize(TEXT_SIZE);
         mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
 
-        mColorArr  = new int[] {Color.RED, Color.GRAY, Color.GREEN, Color.BLUE,
-                                Color.WHITE, Color.YELLOW, Color.CYAN, Color.BLACK};
+        mColorArr  = new int[] {R.color.colorOne, R.color.colorTwo, R.color.colorThree, R.color.colorFour,
+                R.color.colorOne, R.color.colorTwo, R.color.colorThree, R.color.colorFour};
     }
 
     private void calculateCircleParams() {
@@ -100,6 +101,7 @@ public class LuckyWheel extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         if (mRadius == 0) {
             calculateCircleParams();
         }
@@ -108,20 +110,23 @@ public class LuckyWheel extends View {
         int angleStep = 360 / mColorArr.length;
         int initialAngle = 180 - angleStep/2;
         for (int i = 0; i < mColorArr.length; i++) {
+            mSectorPaint.setColor(ContextCompat.getColor(getContext(),mColorArr[i]));
             canvas.drawArc(mRectF, initialAngle,angleStep, true, mSectorPaint);
             canvas.drawText("OPTION " + i, mViewWidth / 2f - mRadius * 0.9f, mViewHeight / 2f + TEXT_SIZE / 2, mTextPaint);
-            mSectorPaint.setColor(mColorArr[i]);
-            canvas.rotate(angleStep, mCenterX, mCenterY);
+
+            canvas.rotate(-angleStep, mCenterX, mCenterY);
         }
 
     }
 
-    public float getBearing() {
+/*    public float getBearing() {
         return mBearing;
     }
 
     public void setBearing(float mBearing) {
         this.mBearing = mBearing;
+        invalidate();
+        Log.d("AAAAAAAAAAAAAA", "from setBearing " + mBearing);
     }
-
+*/
 }
