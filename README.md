@@ -8,3 +8,5 @@ It is taken into account velocity of the fling at the and of the gesture and how
 The faster (the farther from the center) - the higher initial rotation speed.
 
 To implement animation ObjectAnimator with DecelerateInterpolator is used.
+
+<img src="https://github.com/IraMMR/LuckyWheelAndroid/blob/master/app/src/main/res/drawable/Circular_Lucky_Wheel_demo.gif" alt="">
